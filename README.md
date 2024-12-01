@@ -42,7 +42,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
       "command": "uv",
       "args": [
         "--directory",
-        "/Users/stefan/Documents/Playground/OpenAI/unichat-mcp-server",
+        "{{your source code local directory}}/unichat-mcp-server",
         "run",
         "unichat-mcp-server"
       ],
@@ -105,7 +105,7 @@ experience, we strongly recommend using the [MCP Inspector](https://github.com/m
 You can launch the MCP Inspector via [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) with this command:
 
 ```bash
-npx @modelcontextprotocol/inspector uvx --directory {{your source code directory}}/unichat-mcp-server run unichat-mcp-server
+npx @modelcontextprotocol/inspector uvx --directory {{your source code local directory}}/unichat-mcp-server run unichat-mcp-server
 ```
 
 

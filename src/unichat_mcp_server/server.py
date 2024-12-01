@@ -8,13 +8,6 @@ import unichat
 from mcp.server import NotificationOptions, Server
 from mcp.server.models import InitializationOptions
 
-# Set up logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger("unichat-mcp-server")
-
 # Initialize the server
 server = Server("unichat-mcp-server")
 
@@ -87,7 +80,6 @@ async def handle_list_prompts() -> list[types.Prompt]:
 
 @server.get_prompt()
 async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> types.GetPromptResult:
-    logger.debug(f"Handling get_prompt request for {name} with args {arguments}")
     prompt_templates = {
         "code_review": """You are a senior software engineer conducting a thorough code review.
             Review the following code for:
@@ -125,18 +117,15 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
             """
     }
     if name not in prompt_templates:
-        logger.error(f"Unknown prompt: {name}")
         raise ValueError(f"Unknown prompt: {name}")
 
     if not arguments or "code" not in arguments:
-        logger.error("Missing required argument: code")
         raise ValueError("Missing required argument: code")
 
     code = arguments["code"]
 
     # Format the template with provided arguments
     system_content = prompt_templates[name].format(code=code)
-    logger.debug(f"Generated prompt template for prompt: {name}")
 
     try:
         response = chat_api.chat.completions.create(
@@ -157,7 +146,6 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
             ],
         )
     except Exception as e:
-        logger.error(f"Error in prompt {name}: {e}")
         raise Exception(f"An error occurred: {e}")
 
 
@@ -223,7 +211,6 @@ async def handle_call_tool(name: str, arguments: dict | None) -> list[types.Text
 
         return [format_response(response)]
     except Exception as e:
-        logger.error(f"Error in tool {name}: {e}")
         raise Exception(f"An error occurred: {e}")
 
 async def main():
