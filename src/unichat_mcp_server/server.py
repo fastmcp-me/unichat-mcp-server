@@ -44,12 +44,12 @@ def validate_messages(messages):
         if msg["role"] not in ["system", "user"]:
             raise ValueError("Message role must be either 'system' or 'user'")
 
-def format_response(response: str) -> list[types.TextContent]:
+def format_response(response: str) -> types.TextContent:
     """Format the response with proper structure and error handling."""
     try:
-        return [{"type": "text", "text": response.strip()}]
+        return {"type": "text", "text": response.strip()}
     except Exception as e:
-        return [{"type": "text", "text": f"Error formatting response: {str(e)}"}]
+        return {"type": "text", "text": f"Error formatting response: {str(e)}"}
 
 @server.list_prompts()
 async def handle_list_prompts() -> list[types.Prompt]:
@@ -63,11 +63,6 @@ async def handle_list_prompts() -> list[types.Prompt]:
                     description="The code to review",
                     required=True
                 ),
-                types.PromptArgument(
-                    name="language",
-                    description="The programming language of the code",
-                    required=True
-                )
             ]
         ),
         types.Prompt(
@@ -78,16 +73,6 @@ async def handle_list_prompts() -> list[types.Prompt]:
                     name="code",
                     description="The code to document",
                     required=True
-                ),
-                types.PromptArgument(
-                    name="language",
-                    description="The programming language of the code",
-                    required=True
-                ),
-                types.PromptArgument(
-                    name="style",
-                    description="Documentation style (e.g., Google, NumPy, reStructuredText)",
-                    required=False
                 )
             ]
         ),
@@ -99,11 +84,6 @@ async def handle_list_prompts() -> list[types.Prompt]:
                     name="code",
                     description="The code to explain",
                     required=True
-                ),
-                types.PromptArgument(
-                    name="level",
-                    description="Explanation level (beginner/intermediate/advanced)",
-                    required=False
                 )
             ]
         )
@@ -113,7 +93,7 @@ async def handle_list_prompts() -> list[types.Prompt]:
 async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> types.GetPromptResult:
     prompt_templates = {
         "code_review": """You are a senior software engineer conducting a thorough code review.
-            Review the following {language} code for:
+            Review the following code for:
             - Best practices
             - Potential bugs
             - Performance issues
@@ -124,8 +104,7 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
             {code}
             """,
         "document_code": """You are a technical documentation expert.
-            Generate comprehensive documentation for the following {language} code.
-            Style guide: {style if style else 'Google'}
+            Generate comprehensive documentation for the following code.
             Include:
             - Overview
             - Function/class documentation
@@ -136,8 +115,8 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
             Code to document:
             {code}
             """,
-        "explain_code": """You are a programming instructor explaining code to a {level if level else 'intermediate'} level programmer.
-            Explain how the following {language if 'language' in arguments else ''} code works:
+        "explain_code": """You are a programming instructor explaining code to a beginner level programmer.
+            Explain how the following code works:
 
             {code}
 
@@ -148,12 +127,18 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
             - Any important concepts used
             """
     }
-
     if name not in prompt_templates:
+        logger.error(f"Unknown prompt: {name}")
         raise ValueError(f"Unknown prompt: {name}")
 
+    if not arguments or "code" not in arguments:
+        logger.error("Missing required argument: code")
+        raise ValueError("Missing required argument: code")
+
+    code = arguments["code"]
+
     # Format the template with provided arguments
-    system_content = prompt_templates[name].format(**arguments)
+    system_content = prompt_templates[name].format(code=code)
 
     try:
         response = chat_api.chat.completions.create(
@@ -164,10 +149,19 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
             ],
             stream=False
         )
-        return format_response(response)
+        return types.GetPromptResult(
+            description=f"Requested code manipulation",
+            messages=[
+                types.PromptMessage(
+                    role="user",
+                    content=format_response(response),
+                )
+            ],
+        )
     except Exception as e:
         logger.error(f"Error in prompt {name}: {e}")
         raise Exception(f"An error occurred: {e}")
+
 
 @server.list_tools()
 async def handle_list_tools() -> list[types.Tool]:
@@ -216,7 +210,7 @@ async def handle_list_tools() -> list[types.Tool]:
     ]
 
 @server.call_tool()
-async def handle_call_tool(name: str, arguments: dict | None) -> list[types.TextContent]:
+async def handle_call_tool(name: str, arguments: dict | None) -> types.TextContent:
     if name != "unichat":
         raise ValueError(f"Unknown tool: {name}")
 
