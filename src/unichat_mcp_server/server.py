@@ -32,10 +32,10 @@ def validate_messages(messages):
     """Validate the structure and content of chat messages."""
     if not isinstance(messages, list):
         raise ValueError("Messages must be a list")
-    
+
     if len(messages) != 2:
         raise ValueError("Exactly two messages are required: one system message and one user message")
-    
+
     for msg in messages:
         if not isinstance(msg, dict):
             raise ValueError("Each message must be a dictionary")
@@ -110,7 +110,7 @@ async def handle_list_prompts() -> list[types.Prompt]:
     ]
 
 @server.call_prompt()
-async def handle_call_prompt(name: str, arguments: dict) -> list[types.TextContent]:
+async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> types.GetPromptResult:
     prompt_templates = {
         "code_review": """You are a senior software engineer conducting a thorough code review.
             Review the following {language} code for:
@@ -119,7 +119,7 @@ async def handle_call_prompt(name: str, arguments: dict) -> list[types.TextConte
             - Performance issues
             - Security concerns
             - Code style and readability
-            
+
             Code to review:
             {code}
             """,
@@ -132,15 +132,15 @@ async def handle_call_prompt(name: str, arguments: dict) -> list[types.TextConte
             - Parameter descriptions
             - Return value descriptions
             - Usage examples
-            
+
             Code to document:
             {code}
             """,
         "explain_code": """You are a programming instructor explaining code to a {level if level else 'intermediate'} level programmer.
             Explain how the following {language if 'language' in arguments else ''} code works:
-            
+
             {code}
-            
+
             Break down:
             - Overall purpose
             - Key components
@@ -148,13 +148,13 @@ async def handle_call_prompt(name: str, arguments: dict) -> list[types.TextConte
             - Any important concepts used
             """
     }
-    
+
     if name not in prompt_templates:
         raise ValueError(f"Unknown prompt: {name}")
-    
+
     # Format the template with provided arguments
     system_content = prompt_templates[name].format(**arguments)
-    
+
     try:
         response = chat_api.chat.completions.create(
             model=MODEL,
@@ -222,13 +222,13 @@ async def handle_call_tool(name: str, arguments: dict | None) -> list[types.Text
 
     try:
         validate_messages(arguments.get("messages", []))
-        
+
         response = chat_api.chat.completions.create(
             model=MODEL,
             messages=arguments["messages"],
             stream=False
         )
-        
+
         return format_response(response)
     except Exception as e:
         logger.error(f"Error in tool {name}: {e}")
