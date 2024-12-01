@@ -2,6 +2,7 @@
 
 Unichat MCP Server
 
+
 ### Tools
 
 The server implements one tool:
@@ -9,6 +10,20 @@ The server implements one tool:
   - Takes "messages" as required string arguments
   - Returns a response
 
+### Prompts
+
+- `code_review`
+  - Review code for best practices, potential issues, and improvements
+  - Arguments:
+    - `code` (string, required): The code to review"
+- `document_code`
+  - Generate documentation for code including docstrings and comments
+  - Arguments:
+    - `code` (string, required): The code to comment"
+- `explain_code`
+  - Explain how a piece of code works in detail
+  - Arguments:
+    - `code` (string, required): The code to explain"
 
 ## Quickstart
 
