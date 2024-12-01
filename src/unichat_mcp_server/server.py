@@ -210,7 +210,7 @@ async def handle_list_tools() -> list[types.Tool]:
     ]
 
 @server.call_tool()
-async def handle_call_tool(name: str, arguments: dict | None) -> types.TextContent:
+async def handle_call_tool(name: str, arguments: dict | None) -> list[types.TextContent]:
     if name != "unichat":
         raise ValueError(f"Unknown tool: {name}")
 
@@ -223,7 +223,7 @@ async def handle_call_tool(name: str, arguments: dict | None) -> types.TextConte
             stream=False
         )
 
-        return format_response(response)
+        return [format_response(response)]
     except Exception as e:
         logger.error(f"Error in tool {name}: {e}")
         raise Exception(f"An error occurred: {e}")
