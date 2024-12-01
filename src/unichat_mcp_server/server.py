@@ -109,7 +109,7 @@ async def handle_list_prompts() -> list[types.Prompt]:
         )
     ]
 
-@server.call_prompt()
+@server.get_prompt()
 async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> types.GetPromptResult:
     prompt_templates = {
         "code_review": """You are a senior software engineer conducting a thorough code review.
