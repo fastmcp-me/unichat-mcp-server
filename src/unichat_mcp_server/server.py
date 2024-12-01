@@ -45,43 +45,45 @@ def format_response(response: str) -> types.TextContent:
     except Exception as e:
         return {"type": "text", "text": f"Error formatting response: {str(e)}"}
 
+PROMPTS = {
+    "code_review": types.Prompt(
+        name="code_review",
+        description="Review code for best practices, potential issues, and improvements",
+        arguments=[
+            types.PromptArgument(
+                name="code",
+                description="The code to review",
+                required=True
+            )
+        ]
+    ),
+    "document_code": types.Prompt(
+        name="document_code",
+        description="Generate documentation for code including docstrings and comments",
+        arguments=[
+            types.PromptArgument(
+                name="code",
+                description="The code to document",
+                required=True
+            )
+        ]
+    ),
+    "explain_code": types.Prompt(
+        name="explain_code",
+        description="Explain how a piece of code works in detail",
+        arguments=[
+            types.PromptArgument(
+                name="code",
+                description="The code to explain",
+                required=True
+            )
+        ]
+    )
+}
+
 @server.list_prompts()
 async def handle_list_prompts() -> list[types.Prompt]:
-    return [
-        types.Prompt(
-            name="code_review",
-            description="Review code for best practices, potential issues, and improvements",
-            arguments=[
-                types.PromptArgument(
-                    name="code",
-                    description="The code to review",
-                    required=True
-                ),
-            ]
-        ),
-        types.Prompt(
-            name="document_code",
-            description="Generate documentation for code including docstrings and comments",
-            arguments=[
-                types.PromptArgument(
-                    name="code",
-                    description="The code to document",
-                    required=True
-                )
-            ]
-        ),
-        types.Prompt(
-            name="explain_code",
-            description="Explain how a piece of code works in detail",
-            arguments=[
-                types.PromptArgument(
-                    name="code",
-                    description="The code to explain",
-                    required=True
-                )
-            ]
-        )
-    ]
+    return list(PROMPTS.values())
 
 @server.get_prompt()
 async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> types.GetPromptResult:
