@@ -6,7 +6,7 @@ Unichat MCP Server
 ### Tools
 
 The server implements one tool:
-- unichat: Send a request to unichat
+- `unichat`: Send a request to unichat
   - Takes "messages" as required string arguments
   - Returns a response
 
@@ -105,7 +105,7 @@ experience, we strongly recommend using the [MCP Inspector](https://github.com/m
 You can launch the MCP Inspector via [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) with this command:
 
 ```bash
-npx @modelcontextprotocol/inspector uv --directory /Users/stefan/Documents/Playground/OpenAI/unichat-mcp-server run unichat-mcp-server
+npx @modelcontextprotocol/inspector uvx --directory {{your source code directory}}/unichat-mcp-server run unichat-mcp-server
 ```
 
 
