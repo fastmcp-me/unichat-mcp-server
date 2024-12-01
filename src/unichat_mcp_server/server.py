@@ -29,20 +29,14 @@ if not UNICHAT_API_KEY:
 chat_api = unichat.UnifiedChatApi(api_key=UNICHAT_API_KEY)
 
 def validate_messages(messages):
-    """Validate the structure and content of chat messages."""
-    if not isinstance(messages, list):
-        raise ValueError("Messages must be a list")
-
     if len(messages) != 2:
         raise ValueError("Exactly two messages are required: one system message and one user message")
 
-    for msg in messages:
-        if not isinstance(msg, dict):
-            raise ValueError("Each message must be a dictionary")
-        if "role" not in msg or "content" not in msg:
-            raise ValueError("Each message must have 'role' and 'content' fields")
-        if msg["role"] not in ["system", "user"]:
-            raise ValueError("Message role must be either 'system' or 'user'")
+    if messages[0]["role"] != "system":
+        raise ValueError("First message must have role 'system'")
+
+    if messages[1]["role"] != "user":
+        raise ValueError("Second message must have role 'user'")
 
 def format_response(response: str) -> types.TextContent:
     """Format the response with proper structure and error handling."""

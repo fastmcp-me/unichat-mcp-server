@@ -1,6 +1,6 @@
 [project]
 name = "unichat-mcp-server"
-version = "0.2.5"
+version = "0.2.6"
 description = "Unichat MCP Server"
 readme = "README.md"
 requires-python = ">=3.11"
