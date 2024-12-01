@@ -87,6 +87,7 @@ async def handle_list_prompts() -> list[types.Prompt]:
 
 @server.get_prompt()
 async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> types.GetPromptResult:
+    logger.debug(f"Handling get_prompt request for {name} with args {arguments}")
     prompt_templates = {
         "code_review": """You are a senior software engineer conducting a thorough code review.
             Review the following code for:
@@ -135,6 +136,7 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
 
     # Format the template with provided arguments
     system_content = prompt_templates[name].format(code=code)
+    logger.debug(f"Generated prompt template for prompt: {name}")
 
     try:
         response = chat_api.chat.completions.create(
