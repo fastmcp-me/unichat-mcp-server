@@ -78,12 +78,8 @@ This will create source and wheel distributions in the `dist/` directory.
 
 3. Publish to PyPI:
 ```bash
-uv publish
+uv publish --token {{YOUR_PYPI_API_TOKEN}}
 ```
-
-Note: You'll need to set PyPI credentials via environment variables or command flags:
-- Token: `--token` or `UV_PUBLISH_TOKEN`
-- Or username/password: `--username`/`UV_PUBLISH_USERNAME` and `--password`/`UV_PUBLISH_PASSWORD`
 
 ### Debugging
 

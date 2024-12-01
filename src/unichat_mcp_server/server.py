@@ -39,7 +39,6 @@ async def handle_list_tools() -> list[types.Tool]:
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "model": {"type": "string"},
                     "messages": {
                         "type": "array",
                         "items": {
@@ -62,7 +61,7 @@ async def handle_list_tools() -> list[types.Tool]:
                         "description": "Array of exactly two messages: first a system message defining the task, then a user message with the specific query"
                     },
                 },
-                "required": ["model", "messages"],
+                "required": ["messages"],
             },
         ),
     ]
