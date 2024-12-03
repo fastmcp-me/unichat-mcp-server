@@ -1,6 +1,5 @@
 import asyncio
 import os
-import logging
 
 import mcp.server.stdio
 import mcp.types as types
@@ -15,6 +14,8 @@ server = Server("unichat-mcp-server")
 MODEL = os.getenv("UNICHAT_MODEL")
 if not MODEL:
     raise ValueError("UNICHAT_MODEL environment variable required")
+if not any(MODEL in models_list for models_list in unichat.MODELS_LIST.values()):
+    raise ValueError(f"Unsupported model: {MODEL}")
 UNICHAT_API_KEY = os.getenv("UNICHAT_API_KEY")
 if not UNICHAT_API_KEY:
     raise ValueError("UNICHAT_API_KEY environment variable required")
@@ -32,7 +33,6 @@ def validate_messages(messages):
         raise ValueError("Second message must have role 'user'")
 
 def format_response(response: str) -> types.TextContent:
-    """Format the response with proper structure and error handling."""
     try:
         return {"type": "text", "text": response.strip()}
     except Exception as e:
@@ -68,6 +68,22 @@ PROMPTS = {
             types.PromptArgument(
                 name="code",
                 description="The code to explain",
+                required=True
+            )
+        ]
+    ),
+    "code_rework": types.Prompt(
+        name="code_rework",
+        description="Apply requested changes to the provided code",
+        arguments=[
+            types.PromptArgument(
+                name="changes",
+                description="The changes to apply",
+                required=False
+            ),
+            types.PromptArgument(
+                name="code",
+                description="The code to rework",
                 required=True
             )
         ]
@@ -114,6 +130,18 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
             - Key components
             - How it works step by step
             - Any important concepts used
+            """,
+        "code_rework": """You are a software architect specializing in code optimization and modernization.
+            With a foucs on:
+            - Modernizing syntax and approaches
+            - Improving structure and organization
+            - Enhancing maintainability
+            - Optimizing performance
+            - Applying current best practices
+            Do: {changes}
+
+            Code to transform:
+            {code}
             """
     }
     if name not in prompt_templates:
@@ -122,10 +150,8 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
     if not arguments or "code" not in arguments:
         raise ValueError("Missing required argument: code")
 
-    code = arguments["code"]
-
     # Format the template with provided arguments
-    system_content = prompt_templates[name].format(code=code)
+    system_content = prompt_templates[name].format(**arguments)
 
     try:
         response = chat_api.chat.completions.create(
@@ -154,17 +180,10 @@ async def handle_list_tools() -> list[types.Tool]:
     return [
         types.Tool(
             name="unichat",
-            description="""Chat with the assistant. Messages must follow a specific structure:
-            - First message should be a system message defining the task or context
-            - Second message should be a user message containing the specific query or request
-
-            Example structure:
-            {
-                "messages": [
-                    {"role": "system", "content": "You are a helpful assistant focused on answering questions about Python programming"},
-                    {"role": "user", "content": "How do I use list comprehensions?"}
-                ]
-            }""",
+            description="""Chat with an assistant.
+                        Example tool use message:
+                        Ask the unichat to review and evaluate your proposal.
+                        """,
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -220,7 +239,7 @@ async def main():
             write_stream,
             InitializationOptions(
                 server_name="unichat-mcp-server",
-                server_version="0.1.0",
+                server_version="0.2.11",
                 capabilities=server.get_capabilities(
                     notification_options=NotificationOptions(),
                     experimental_capabilities={},

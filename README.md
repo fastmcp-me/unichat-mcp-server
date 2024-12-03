@@ -25,6 +25,11 @@ The server implements one tool:
   - Explain how a piece of code works in detail
   - Arguments:
     - `code` (string, required): The code to explain"
+- `code_rework`
+  - Apply requested changes to the provided code
+  - Arguments:
+    - `changes` (string, optional): The changes to apply"
+    - `code` (string, required): The code to rework"
 
 ## Quickstart
 
@@ -35,44 +40,40 @@ The server implements one tool:
 On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
-<details>
-  <summary>Development/Unpublished Servers Configuration</summary>
-  ```
-  "mcpServers": {
-    "unichat-mcp-server": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "{{your source code local directory}}/unichat-mcp-server",
-        "run",
-        "unichat-mcp-server"
-      ],
-      "env": {
-        "UNICHAT_MODEL": "SELECTED_UNICHAT_MODEL",
-        "UNICHAT_API_KEY": "YOUR_UNICHAT_API_KEY"
-      }
+Development/Unpublished Servers Configuration
+```json
+"mcpServers": {
+  "unichat-mcp-server": {
+    "command": "uv",
+    "args": [
+      "--directory",
+      "{{your source code local directory}}/unichat-mcp-server",
+      "run",
+      "unichat-mcp-server"
+    ],
+    "env": {
+      "UNICHAT_MODEL": "SELECTED_UNICHAT_MODEL",
+      "UNICHAT_API_KEY": "YOUR_UNICHAT_API_KEY"
     }
   }
-  ```
-</details>
+}
+```
 
-<details>
-  <summary>Published Servers Configuration</summary>
-  ```
-  "mcpServers": {
-    "unichat-mcp-server": {
-      "command": "uvx",
-      "args": [
-        "unichat-mcp-server"
-      ],
-      "env": {
-        "UNICHAT_MODEL": "SELECTED_UNICHAT_MODEL",
-        "UNICHAT_API_KEY": "YOUR_UNICHAT_API_KEY"
-      }
+Published Servers Configuration
+```json
+"mcpServers": {
+  "unichat-mcp-server": {
+    "command": "uvx",
+    "args": [
+      "unichat-mcp-server"
+    ],
+    "env": {
+      "UNICHAT_MODEL": "SELECTED_UNICHAT_MODEL",
+      "UNICHAT_API_KEY": "YOUR_UNICHAT_API_KEY"
     }
   }
-  ```
-</details>
+}
+```
 
 ## Development
 
@@ -106,7 +107,7 @@ experience, we strongly recommend using the [MCP Inspector](https://github.com/m
 You can launch the MCP Inspector via [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) with this command:
 
 ```bash
-npx @modelcontextprotocol/inspector uvx --directory {{your source code local directory}}/unichat-mcp-server run unichat-mcp-server
+npx @modelcontextprotocol/inspector uv --directory {{your source code local directory}}/unichat-mcp-server run unichat-mcp-server
 ```
 
 
