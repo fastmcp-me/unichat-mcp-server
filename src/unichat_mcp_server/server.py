@@ -191,12 +191,14 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
             ],
             stream=False
         )
+        response = format_response(response)
+        
         return types.GetPromptResult(
             description=f"Requested code manipulation",
             messages=[
                 types.PromptMessage(
                     role="user",
-                    content=format_response(response),
+                    content=response,
                 )
             ],
         )
@@ -260,7 +262,9 @@ async def handle_call_tool(name: str, arguments: dict | None) -> list[types.Text
             stream=False
         )
 
-        return [format_response(response)]
+        response = format_response(response)
+
+        return [response]
     except Exception as e:
         logger.error(f"Error calling tool: {str(e)}")
         raise Exception(f"An error occurred: {e}")
@@ -272,7 +276,7 @@ async def main():
             write_stream,
             InitializationOptions(
                 server_name="unichat-mcp-server",
-                server_version="0.2.12",
+                server_version="0.2.13",
                 capabilities=server.get_capabilities(
                     notification_options=NotificationOptions(),
                     experimental_capabilities={},
