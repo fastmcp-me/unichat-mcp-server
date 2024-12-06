@@ -1,11 +1,17 @@
 import asyncio
+import logging
 import os
 
+from mcp import LoggingLevel
 import mcp.server.stdio
 import mcp.types as types
 import unichat
 from mcp.server import NotificationOptions, Server
 from mcp.server.models import InitializationOptions
+
+# Set up logging
+logger = logging.getLogger("unichat-mcp-server")
+logger.setLevel(logging.INFO)
 
 # Initialize the server
 server = Server("unichat-mcp-server")
@@ -13,29 +19,40 @@ server = Server("unichat-mcp-server")
 # API configuration
 MODEL = os.getenv("UNICHAT_MODEL")
 if not MODEL:
+    logger.error("UNICHAT_MODEL environment variable not found")
     raise ValueError("UNICHAT_MODEL environment variable required")
 if not any(MODEL in models_list for models_list in unichat.MODELS_LIST.values()):
+    logger.error(f"Invalid model specified: {MODEL}")
     raise ValueError(f"Unsupported model: {MODEL}")
 UNICHAT_API_KEY = os.getenv("UNICHAT_API_KEY")
 if not UNICHAT_API_KEY:
+    logger.error("UNICHAT_API_KEY environment variable not found")
     raise ValueError("UNICHAT_API_KEY environment variable required")
 
 chat_api = unichat.UnifiedChatApi(api_key=UNICHAT_API_KEY)
 
 def validate_messages(messages):
+    logger.debug(f"Validating messages: {len(messages)} messages received")
     if len(messages) != 2:
+        logger.error(f"Invalid number of messages: {len(messages)}")
         raise ValueError("Exactly two messages are required: one system message and one user message")
 
     if messages[0]["role"] != "system":
+        logger.error("First message has incorrect role")
         raise ValueError("First message must have role 'system'")
 
     if messages[1]["role"] != "user":
+        logger.error("Second message has incorrect role")
         raise ValueError("Second message must have role 'user'")
 
 def format_response(response: str) -> types.TextContent:
+    logger.debug("Formatting response")
     try:
-        return {"type": "text", "text": response.strip()}
+        formatted = {"type": "text", "text": response.strip()}
+        logger.debug("Response formatted successfully")
+        return formatted
     except Exception as e:
+        logger.error(f"Error formatting response: {str(e)}")
         return {"type": "text", "text": f"Error formatting response: {str(e)}"}
 
 PROMPTS = {
@@ -89,6 +106,15 @@ PROMPTS = {
         ]
     )
 }
+@server.set_logging_level()
+async def set_logging_level(level: LoggingLevel) -> types.EmptyResult:
+    logger.setLevel(level.upper())
+    await server.request_context.session.send_log_message(
+        level="info",
+        data=f"Log level set to {level}",
+        logger="unichat-mcp-server"
+    )
+    return types.EmptyResult()
 
 @server.list_prompts()
 async def handle_list_prompts() -> list[types.Prompt]:
@@ -145,11 +171,14 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
             """
     }
     if name not in prompt_templates:
+        logger.error(f"Prompt not found: {name}")
         raise ValueError(f"Unknown prompt: {name}")
 
     if not arguments or "code" not in arguments:
+        logger.error("Missing required code argument")
         raise ValueError("Missing required argument: code")
 
+    logger.debug("Formatting prompt template")
     # Format the template with provided arguments
     system_content = prompt_templates[name].format(**arguments)
 
@@ -172,6 +201,7 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
             ],
         )
     except Exception as e:
+        logger.error(f"Error getting prompt completion: {str(e)}")
         raise Exception(f"An error occurred: {e}")
 
 
@@ -217,9 +247,11 @@ async def handle_list_tools() -> list[types.Tool]:
 @server.call_tool()
 async def handle_call_tool(name: str, arguments: dict | None) -> list[types.TextContent]:
     if name != "unichat":
+        logger.error(f"Unknown tool requested: {name}")
         raise ValueError(f"Unknown tool: {name}")
 
     try:
+        logger.debug("Validating messages")
         validate_messages(arguments.get("messages", []))
 
         response = chat_api.chat.completions.create(
@@ -230,6 +262,7 @@ async def handle_call_tool(name: str, arguments: dict | None) -> list[types.Text
 
         return [format_response(response)]
     except Exception as e:
+        logger.error(f"Error calling tool: {str(e)}")
         raise Exception(f"An error occurred: {e}")
 
 async def main():
@@ -239,7 +272,7 @@ async def main():
             write_stream,
             InitializationOptions(
                 server_name="unichat-mcp-server",
-                server_version="0.2.11",
+                server_version="0.2.12",
                 capabilities=server.get_capabilities(
                     notification_options=NotificationOptions(),
                     experimental_capabilities={},
