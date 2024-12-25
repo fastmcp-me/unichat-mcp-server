@@ -191,8 +191,8 @@ async def handle_get_prompt(name: str, arguments: dict[str, str] | None) -> type
             ],
             stream=False
         )
-        response = format_response(response)
-        
+        response = format_response(response.choices[0].message.content)
+
         return types.GetPromptResult(
             description=f"Requested code manipulation",
             messages=[
@@ -262,7 +262,7 @@ async def handle_call_tool(name: str, arguments: dict | None) -> list[types.Text
             stream=False
         )
 
-        response = format_response(response)
+        response = format_response(response.choices[0].message.content)
 
         return [response]
     except Exception as e:
@@ -276,7 +276,7 @@ async def main():
             write_stream,
             InitializationOptions(
                 server_name="unichat-mcp-server",
-                server_version="0.2.13",
+                server_version="0.2.14",
                 capabilities=server.get_capabilities(
                     notification_options=NotificationOptions(),
                     experimental_capabilities={},
