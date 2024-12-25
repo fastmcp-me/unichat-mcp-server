@@ -50,7 +50,7 @@ On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
 **Supported Models:**
-> A list of currently supported models to be used as `"SELECTED_UNICHAT_MODEL"` may be found [here](https://github.com/amidabuddha/unichat/blob/main/unichat/models.py). Please makes sure to add the relevant vendor API key as `"YOUR_UNICHAT_API_KEY"`
+> A list of currently supported models to be used as `"SELECTED_UNICHAT_MODEL"` may be found [here](https://github.com/amidabuddha/unichat/blob/main/unichat/models.py). Please make sure to add the relevant vendor API key as `"YOUR_UNICHAT_API_KEY"`
 
 **Example:**
 ```json
