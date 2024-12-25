@@ -1,7 +1,15 @@
 # Unichat MCP Server in Python
 Also available in [TypeScript](https://github.com/amidabuddha/unichat-ts-mcp-server)
-[![smithery badge](https://smithery.ai/badge/unichat-mcp-server)](https://smithery.ai/server/unichat-mcp-server)
 --
+ <h4 align="center">
+  <a href="https://github.com/amidabuddha/unichat-mcp-server/blob/main/LICENSE.md">
+  <img src="https://img.shields.io/github/license/amidabuddha/unichat-mcp-server" alt="Released under the MIT license." />
+  </a>
+  <a href="https://smithery.ai/server/unichat-mcp-server">
+    <img src="https://smithery.ai/badge/unichat-mcp-server" alt="Smithery Server Installations" />
+  </a>
+</h4>
+
 Send requests to OpenAI, MistralAI, Anthropic, xAI, or Google AI using MCP protocol via tool or predefined prompts.
 Vendor API key required
 
@@ -41,6 +49,16 @@ The server implements one tool:
 On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
+**Supported Models:**
+> A list of currently supported models to be used as `"SELECTED_UNICHAT_MODEL"` may be found [here](https://github.com/amidabuddha/unichat/blob/main/unichat/models.py). Please makes sure to add the relevant vendor API key as `"YOUR_UNICHAT_API_KEY"`
+
+**Example:**
+```json
+"env": {
+  "UNICHAT_MODEL": "gpt-4o-mini",
+  "UNICHAT_API_KEY": "YOUR_OPENAI_API_KEY"
+}
+```
 Development/Unpublished Servers Configuration
 ```json
 "mcpServers": {
