@@ -425,21 +425,21 @@ wheels = [
 
 [[package]]
 name = "unichat"
-version = "3.4.1"
+version = "3.4.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anthropic" },
     { name = "mistralai" },
     { name = "openai" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/2b/c4/ed6241dafb8b7e1eb8167147c8b003b7da2609c0d68fa05bf5ac82691707/unichat-3.4.1.tar.gz", hash = "sha256:2763104ced96747b020feaeca9caeea41bd1b2c94b1552dde00b5efeb46b5705", size = 10671 }
+sdist = { url = "https://files.pythonhosted.org/packages/1c/cd/3e01bd8f1ad77629eb2755a0efe954ba2afaec89140b95016d499392df6d/unichat-3.4.3.tar.gz", hash = "sha256:e4c9c89b2c74b935cf86761b2cd14460014d20da4b0efff130eacdc64ecac181", size = 10757 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6b/54/4719b405501b481ab749a16bc9630bec986c9df365866ffb7a012624ff5a/unichat-3.4.1-py3-none-any.whl", hash = "sha256:bf1fdcc14bfeea1618b714cb8ebbcd8d248cf3be2242232258de1ab9ec5d521f", size = 10624 },
+    { url = "https://files.pythonhosted.org/packages/a7/34/7fba4e66e453e66a008e97e8c70a547dad9afd92d776d433e42125603e30/unichat-3.4.3-py3-none-any.whl", hash = "sha256:336c081f814e6e847dd14c170930d6650fd76f9beaef38b295c7d4960b404b42", size = 10691 },
 ]
 
 [[package]]
 name = "unichat-mcp-server"
-version = "0.2.17"
+version = "0.2.18"
 source = { editable = "." }
 dependencies = [
     { name = "mcp" },
@@ -449,7 +449,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "mcp", specifier = ">=1.0.0" },
-    { name = "unichat", specifier = "~=3.4.1" },
+    { name = "unichat", specifier = "~=3.4.3" },
 ]
 
 [[package]]
