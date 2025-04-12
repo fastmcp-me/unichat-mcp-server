@@ -10,7 +10,7 @@ Also available in [TypeScript](https://github.com/amidabuddha/unichat-ts-mcp-ser
   </a>
 </h4>
 
-Send requests to OpenAI, MistralAI, Anthropic, xAI, Google AI, DeepSeek, Aliababa, Inception using MCP protocol via tool or predefined prompts.
+Send requests to OpenAI, MistralAI, Anthropic, xAI, Google AI, DeepSeek, Alibaba, Inception using MCP protocol via tool or predefined prompts.
 Vendor API key required
 
 ### Tools
