@@ -108,19 +108,24 @@ npx -y @smithery/cli install unichat-mcp-server --client claude
 
 To prepare the package for distribution:
 
-1. Sync dependencies and update lockfile:
+1. Remove older builds:
+```bash
+rm -rf dist
+```
+
+2. Sync dependencies and update lockfile:
 ```bash
 uv sync
 ```
 
-2. Build package distributions:
+3. Build package distributions:
 ```bash
 uv build
 ```
 
 This will create source and wheel distributions in the `dist/` directory.
 
-3. Publish to PyPI:
+4. Publish to PyPI:
 ```bash
 uv publish --token {{YOUR_PYPI_API_TOKEN}}
 ```
