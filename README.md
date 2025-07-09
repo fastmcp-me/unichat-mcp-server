@@ -1,9 +1,12 @@
-[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/amidabuddha-unichat-mcp-server-badge.png)](https://mseep.ai/app/amidabuddha-unichat-mcp-server)
-
 # Unichat MCP Server in Python
 Also available in [TypeScript](https://github.com/amidabuddha/unichat-ts-mcp-server)
 --
  <h4 align="center">
+  <a href="https://mseep.ai/app/amidabuddha-unichat-mcp-server">
+  <img src="https://mseep.net/pr/amidabuddha-unichat-mcp-server-badge.png" alt="MseeP.ai Security Assessment Badge" />
+  </a>
+ </h4>
+  <h4 align="center">
   <a href="https://github.com/amidabuddha/unichat-mcp-server/blob/main/LICENSE.md">
   <img src="https://img.shields.io/github/license/amidabuddha/unichat-mcp-server" alt="Released under the MIT license." />
   </a>
@@ -11,6 +14,11 @@ Also available in [TypeScript](https://github.com/amidabuddha/unichat-ts-mcp-ser
     <img src="https://smithery.ai/badge/unichat-mcp-server" alt="Smithery Server Installations" />
   </a>
 </h4>
+ <h4 align="center">
+  <a href="https://mcphub.com/mcp-servers/amidabuddha/unichat-mcp-server">
+  <img src="https://img.mcphub.com/_next/image?url=%2Flogo-dark.png&w=48&q=75" alt="Hosted at MCPHub" />
+  </a>
+ </h4>
 
 Send requests to OpenAI, MistralAI, Anthropic, xAI, Google AI, DeepSeek, Alibaba, Inception using MCP protocol via tool or predefined prompts.
 Vendor API key required
