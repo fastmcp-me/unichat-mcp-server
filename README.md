@@ -10,6 +10,9 @@ Also available in [TypeScript](https://github.com/amidabuddha/unichat-ts-mcp-ser
   <a href="https://github.com/amidabuddha/unichat-mcp-server/blob/main/LICENSE.md">
   <img src="https://img.shields.io/github/license/amidabuddha/unichat-mcp-server" alt="Released under the MIT license." />
   </a>
+  <a href="https://archestra.ai/mcp-catalog/amidabuddha__unichat-mcp-server">
+    <img src="https://archestra.ai/mcp-catalog/api/badge/quality/amidabuddha/unichat-mcp-server" alt="Trust Score" />
+  </a>
   <a href="https://smithery.ai/server/unichat-mcp-server">
     <img src="https://smithery.ai/badge/unichat-mcp-server" alt="Smithery Server Installations" />
   </a>
